@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => WebloginPage(),
-        '/Main': (context) => TabPage(),
+        '/Home': (context) => TabPage(),
         '/Second': (context) => SecondPage()
       },
     );
