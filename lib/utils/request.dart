@@ -18,6 +18,7 @@ class DioUtil{
     static Dio dio = new Dio(options);
     static Future request(method,url,dataMap)async{
         try{
+            tokenInter();
             Response response;
             dio.options.headers[HttpHeaders.acceptHeader]="application/vnd.github.v3+json";
             dio.options.contentType = ContentType.parse("application/json").toString();

@@ -13,9 +13,9 @@ class MinePage extends StatefulWidget {
 class _MyHomePageState extends State<MinePage> {
   String title = 'FutureBuilder使用';
 
-  Future _gerData() async {
-    var response = await DioUtil.get('/users/huxiaofan1223/repos', null);
-    return response;
+  Future _getRepos() async {
+    var response = await DioUtil.get('/user/repos', null);
+    return response.toString();
   }
 
   @override
@@ -31,13 +31,31 @@ class _MyHomePageState extends State<MinePage> {
               builder: _buildFutureUser,
               future: _gerUserInfo(),
             ),
-            // FutureBuilder(
-            //   builder: _buildFuture,
-            //   future: _gerData(),
-            // ),
+            FutureBuilder(
+              builder: _buildFuture,
+              future: _getRepos(),
+            ),
           ],
         ),
       )
+    );
+  }
+  Widget _repoItem(BuildContext context, int index, repos) {
+    return GestureDetector(
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Text(repos[index]["name"]),
+      ),
+      onTap: ()=>{print(index)},
+    );
+  }
+
+  Widget _ReposListView(BuildContext context, AsyncSnapshot snapshot) {
+    String reposString = snapshot.data;
+    List repos = jsonDecode(reposString);
+    return ListView.builder(
+      itemBuilder: (context, index) => _repoItem(context, index, repos),
+      itemCount: repos.length,
     );
   }
 
@@ -57,8 +75,7 @@ class _MyHomePageState extends State<MinePage> {
       case ConnectionState.done:
         print('done');
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-        // return _createListView(context, snapshot);
-        return Text("${snapshot.data.toString()}");
+        return _ReposListView(context, snapshot);
       default:
         return null;
     }
